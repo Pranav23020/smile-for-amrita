@@ -11,10 +11,10 @@ const messages = [
     },
     {
         id: 2,
-        label: "Open when you miss me 🐸",
-        icon: "🥺",
-        content: "I'm probably thinking about you right now too! 🐢❤️🐸 Consider this a digital teleportation hug. *Squeeze*",
-        bgColor: "#ff7675"
+        label: "Open when you are bored 🥱",
+        icon: "🎨",
+        content: "Boredom is just creativity waiting to happen! Why not try drawing a frog with a top hat? 🐸🎩 Or do a little turtle dance! 🐢💃",
+        bgColor: "#a29bfe"
     },
     {
         id: 3,

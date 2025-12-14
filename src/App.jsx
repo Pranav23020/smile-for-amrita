@@ -4,6 +4,7 @@ import Hero from './components/Hero';
 import OpenWhen from './components/OpenWhen';
 import MoodBooster from './components/MoodBooster';
 import ZenMode from './components/ZenMode';
+import WiseTurtle from './components/WiseTurtle';
 import VirtualHug from './components/VirtualHug';
 import BubbleWrap from './components/BubbleWrap';
 import EmergencySmile from './components/EmergencySmile';
@@ -15,6 +16,7 @@ function App() {
     <div className="container" style={{ paddingBottom: '100px' }}>
       <Hero />
       <OpenWhen />
+      <WiseTurtle />
       <MoodBooster />
       <VirtualHug />
       <ZenMode />
