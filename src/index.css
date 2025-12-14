@@ -1,15 +1,20 @@
 :root {
-  --primary-color: #ff6b6b;
-  --secondary-color: #feca57;
-  --background-color: #ffeaa7;
-  /* Warm, cheerful background */
+  --primary-color: #27ae60;
+  /* Turtle Green */
+  --secondary-color: #badc58;
+  /* Froggy Lime */
+  --accent-color: #ff6b6b;
+  /* Love Red */
+  --background-color: #e8f5e9;
+  /* Very Pale Green */
   --text-color: #2d3436;
   --card-bg: #ffffff;
   --font-family: 'Inter', sans-serif;
   --spacing-sm: 8px;
   --spacing-md: 16px;
   --spacing-lg: 24px;
-  --border-radius: 16px;
+  --border-radius: 24px;
+  /* Extra round for cuteness */
 }
 
 * {
