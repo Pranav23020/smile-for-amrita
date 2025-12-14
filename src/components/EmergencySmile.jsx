@@ -11,11 +11,55 @@ const content = [
 
 const EmergencySmile = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const [currentImage, setCurrentImage] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const next = () => {
-        setCurrentIndex((prev) => (prev + 1) % content.length);
+    const fetchCuteness = async () => {
+        setIsLoading(true);
+        try {
+            // Randomly choose an API to keep it surprising
+            const sources = ['dog', 'cat', 'fox'];
+            const randomSource = sources[Math.floor(Math.random() * sources.length)];
+
+            let imageUrl = '';
+            let caption = '';
+
+            if (randomSource === 'dog') {
+                const res = await fetch('https://dog.ceo/api/breeds/image/random');
+                const data = await res.json();
+                imageUrl = data.message;
+                caption = "Who's a good boy? 🐶";
+            } else if (randomSource === 'cat') {
+                const res = await fetch('https://api.thecatapi.com/v1/images/search');
+                const data = await res.json();
+                imageUrl = data[0].url;
+                caption = "Purr-fect! 🐱";
+            } else {
+                const res = await fetch('https://randomfox.ca/floof/');
+                const data = await res.json();
+                imageUrl = data.image;
+                caption = "What does the fox say? 🦊";
+            }
+
+            setCurrentImage({ src: imageUrl, caption });
+        } catch (error) {
+            console.error("Failed to fetch cuteness:", error);
+            // Fallback
+            setCurrentImage({
+                src: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1',
+                caption: 'The internet is shy, but this dog loves you! 🐶'
+            });
+        } finally {
+            setIsLoading(false);
+        }
     };
+
+    // Fetch new image when opening
+    React.useEffect(() => {
+        if (isOpen && !currentImage) {
+            fetchCuteness();
+        }
+    }, [isOpen]);
 
     return (
         <div style={{
@@ -34,7 +78,8 @@ const EmergencySmile = () => {
                     borderRadius: '50px',
                     boxShadow: '0 5px 15px rgba(255, 71, 87, 0.4)',
                     fontWeight: 'bold',
-                    width: '100%'
+                    width: '100%',
+                    cursor: 'pointer'
                 }}
             >
                 {isOpen ? "Close Emergency Kit ❌" : "🚨 EMERGENCY SMILE 🚨"}
@@ -54,49 +99,60 @@ const EmergencySmile = () => {
                             borderRadius: '20px',
                             boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
                         }}>
-                            <AnimatePresence mode='wait'>
-                                <motion.div
-                                    key={currentIndex}
-                                    initial={{ x: 20, opacity: 0 }}
-                                    animate={{ x: 0, opacity: 1 }}
-                                    exit={{ x: -20, opacity: 0 }}
-                                    transition={{ duration: 0.3 }}
-                                >
-                                    {content[currentIndex].type === 'image' ? (
-                                        <>
+
+                            <div style={{ minHeight: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+                                {isLoading ? (
+                                    <div style={{ fontSize: '3rem', animation: 'spin 1s infinite linear' }}>🐢</div>
+                                ) : (
+                                    currentImage && (
+                                        <motion.div
+                                            initial={{ scale: 0.8, opacity: 0 }}
+                                            animate={{ scale: 1, opacity: 1 }}
+                                            key={currentImage.src}
+                                        >
                                             <img
-                                                src={content[currentIndex].src}
+                                                src={currentImage.src}
                                                 alt="Cute animal"
-                                                style={{ width: '100%', borderRadius: '15px', objectFit: 'cover', maxHeight: '300px' }}
+                                                style={{
+                                                    width: '100%',
+                                                    borderRadius: '15px',
+                                                    objectFit: 'cover',
+                                                    maxHeight: '400px',
+                                                    boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
+                                                }}
                                             />
-                                            <p style={{ marginTop: '10px', fontWeight: 600, color: '#2f3542' }}>{content[currentIndex].caption}</p>
-                                        </>
-                                    ) : (
-                                        <div style={{ padding: '40px 0', fontSize: '1.5rem', fontWeight: 'bold', color: '#74b9ff' }}>
-                                            {content[currentIndex].text}
-                                        </div>
-                                    )}
-                                </motion.div>
-                            </AnimatePresence>
+                                            <p style={{ marginTop: '15px', fontWeight: 600, color: '#2f3542', fontSize: '1.1rem' }}>
+                                                {currentImage.caption}
+                                            </p>
+                                        </motion.div>
+                                    )
+                                )}
+                            </div>
 
                             <button
-                                onClick={next}
+                                onClick={fetchCuteness}
+                                disabled={isLoading}
                                 style={{
-                                    marginTop: '15px',
-                                    background: '#f1f2f6',
-                                    color: '#2f3542',
-                                    padding: '10px 20px',
-                                    borderRadius: '10px',
-                                    fontSize: '0.9rem',
-                                    fontWeight: 600
+                                    marginTop: '20px',
+                                    background: 'var(--primary-color)',
+                                    color: 'white',
+                                    padding: '12px 25px',
+                                    borderRadius: '50px',
+                                    fontSize: '1rem',
+                                    fontWeight: 'bold',
+                                    opacity: isLoading ? 0.7 : 1,
+                                    cursor: isLoading ? 'not-allowed' : 'pointer'
                                 }}
                             >
-                                Next Dose ➡️
+                                {isLoading ? "Fetching Cuteness..." : "Next Dose ➡️"}
                             </button>
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
+            <style>{`
+                @keyframes spin { 100% { transform: rotate(360deg); } }
+            `}</style>
         </div>
     );
 };
